@@ -22,4 +22,4 @@ def get_artists_in_playlist(playlist_data):
         artist_data = track_data['track']['artists']
         for artist in artist_data:
             artists.append(artist['name'])
-    return set(artists)
+    return list(set(artists))
