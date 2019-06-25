@@ -1,4 +1,4 @@
-def extract_name_and_id(response):
+def extract_name_and_id(response:dict):
     """Given the result of a spotipy playlist query, return a id and name of the playlist results.
     Parameters:
     ---
