@@ -26,12 +26,3 @@ def get_artists_in_playlist(playlist_data):
         for artist in artist_data:
             artists.append(artist['name'])
     return list(set(artists))
-
-def get_playlists_w_artist(artist, df):
-    """Given an artist and a dataframe of playlists and their artist lists, 
-    return playists where that artist has a song"""
-    result = []
-    for artist_list, playlist_id in zip(df.artists, df.playlist_id):
-        if artist in artist_list:
-            result.append(playlist_id)
-    return result
