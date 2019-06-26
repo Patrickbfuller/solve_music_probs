@@ -26,3 +26,13 @@ def get_artists_in_playlist(playlist_data):
         for artist in artist_data:
             artists.append(artist['name'])
     return list(set(artists))
+
+
+def get_url_for_artist(browser, artist:str):
+    """Given a selenium webdriver browser object, and an artist name,
+    return the url of the artists page on songkick.com"""
+    url_prefix = 'https://www.songkick.com/search?utf8=%E2%9C%93&type=initial&query='
+    query = artist.replace(' ', '+')
+    browser.get(url_prefix+query)
+    a_element = browser.find_element_by_css_selector('p.summary a')
+    return a_element.get_attribute('href')
