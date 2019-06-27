@@ -101,12 +101,12 @@ def get_artist_concerts(browser, artist:str):
                                        artist=artist,
                                        ul_path='#gigography-summary > ul')
     recent_check = past_summary[-1]['date'][:4]
-    print(recent_check, int(recent_check)> 2015)
-    print(type(recent_check))
+    # print(recent_check, int(recent_check)> 2015)
+    # print(type(recent_check))
     if int(recent_check) < 2015:
-        print("should happen")
+        # print("should happen")
         return [] 
-    print("shouldn't happen")
+    # print("shouldn't happen")
     wait()
     cal_url = set_url(browser, 'calendar')   # None if the link isn't present
     gig_url = set_url(browser, 'gigography')
