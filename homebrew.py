@@ -102,33 +102,36 @@ def get_artist_concerts(browser, artist:str):
     past_summary = get_shows_dates_in_ul(browser=browser,
                                        artist=artist,
                                        ul_path='#gigography-summary > ul')
-    recent_check = past_summary[-1]['date'][:4]
-    # print(recent_check, int(recent_check)> 2015)
-    # print(type(recent_check))
-    if int(recent_check) < 2015:
-        # print("should happen")
+    if not past_summary:    # Some artists don't even have a gig-summary
+        return []               # Skip these artists
+    recent_check = past_summary[-1]['date'][:4]     # Look at last element
+    if int(recent_check) < 2015:                    # in summary table
         return [] 
-    # print("shouldn't happen")
     wait()
     cal_url = set_url(browser, 'calendar')   # None if the link isn't present
     gig_url = set_url(browser, 'gigography')
     if not cal_url:
-        # scrape upcoming on main page
+        # scrape upcoming on main page only 
+        # if theres not a link to more upcomings
         shows_list = get_shows_dates_in_ul(browser=browser,
                                            artist=artist,
                                            ul_path='#calendar-summary > ul')
         master_artist_shows_list.extend(shows_list)
     if not gig_url:
-        # already have the list from recent check
-        master_artist_shows_list.extend(past_summary)
+        # Scrape past on main page only
+        # if no link to more past gigs
+        # Already have the list from recent check
+        master_artist_shows_list.extend(past_summary)   # Already have the 
+                                                        # list from 'recent check'
+
     if cal_url:
-        # scrape calendar pages
+        # Scrape calendar pages if more upcomings on another page.
         browser.get(cal_url)
         wait()
         shows_list = get_pages_shows_dates(browser=browser,url=cal_url,artist=artist)
         master_artist_shows_list.extend(shows_list)
     if gig_url:
-        # scrape gigography pages
+        # Scrape gigography pages if more past gigs on another page
         browser.get(gig_url)
         wait()
         shows_list = get_pages_shows_dates(browser=browser,url=gig_url,artist=artist)
