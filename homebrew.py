@@ -36,3 +36,24 @@ def get_url_for_artist(browser, artist:str):
     browser.get(url_prefix+query)
     a_element = browser.find_element_by_css_selector('p.summary a')
     return a_element.get_attribute('href')
+
+def set_url(browser, page:str):
+    """Given a selenium webdriver browser object and a page 
+    title(calendar or gigography only), return the url for the page"""
+    try:
+        element = browser.find_element_by_css_selector(f'#{page}-summary > h2 > small > a')
+        return element.get_attribute('href')
+    except:
+        return None
+
+def get_artist_concerts(browser, artist:str):
+    url = get_url_for_artist(browser, artist)
+    # if not calendar link:
+    #    scrape upcoming
+    # if not gigography link:
+    #    scrap past shows
+    # if calendar link:
+    #    go to calendar link
+    #    scrap
+    # if gigography link:
+    pass
