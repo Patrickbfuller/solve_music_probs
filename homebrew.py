@@ -90,28 +90,43 @@ def get_pages_shows_dates(browser, url:str, artist:str):
 
 def get_artist_concerts(browser, artist:str):
     master_artist_shows_list=[]
-    artist_url = get_url_for_artist(browser, artist)
+    try:
+        artist_url = get_url_for_artist(browser, artist)
+        wait(2,1)
+    except:
+        return []
     browser.get(artist_url)
+    # check if artist is recent
+    past_summary = get_shows_dates_in_ul(browser=browser,
+                                       artist=artist,
+                                       ul_path='#gigography-summary > ul')
+    recent_check = past_summary[-1]['date'][:4]
+    print(recent_check, int(recent_check)> 2015)
+    print(type(recent_check))
+    if int(recent_check) < 2015:
+        print("should happen")
+        return [] 
+    print("shouldn't happen")
     wait()
     cal_url = set_url(browser, 'calendar')   # None if the link isn't present
     gig_url = set_url(browser, 'gigography')
     if not cal_url:
-        #scrape upcoming on main page
+        # scrape upcoming on main page
         shows_list = get_shows_dates_in_ul(browser=browser,
                                            artist=artist,
                                            ul_path='#calendar-summary > ul')
         master_artist_shows_list.extend(shows_list)
     if not gig_url:
-        shows_list = get_shows_dates_in_ul(browser=browser,
-                                           artist=artist,
-                                           ul_path='#gigography-summary > ul')
-        master_artist_shows_list.extend(shows_list)
+        # already have the list from recent check
+        master_artist_shows_list.extend(past_summary)
     if cal_url:
+        # scrape calendar pages
         browser.get(cal_url)
         wait()
         shows_list = get_pages_shows_dates(browser=browser,url=cal_url,artist=artist)
         master_artist_shows_list.extend(shows_list)
     if gig_url:
+        # scrape gigography pages
         browser.get(gig_url)
         wait()
         shows_list = get_pages_shows_dates(browser=browser,url=gig_url,artist=artist)
