@@ -40,7 +40,9 @@ def get_url_for_artist(browser, artist:str):
     url_prefix = 'https://www.songkick.com/search?utf8=%E2%9C%93&type=initial&query='
     query = artist.replace(' ', '+')
     browser.get(url_prefix+query)
-    a_element = browser.find_element_by_css_selector('p.summary a')
+    selector = 'li.artist > div.subject > p.summary a'
+    a_element = browser.find_element_by_css_selector(selector)
+    # a_element = browser.find_element_by_css_selector('p.summary a')  # Old version didn't skip non artists
     return a_element.get_attribute('href')
 
 def set_url(browser, page:str):
