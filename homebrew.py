@@ -1,7 +1,7 @@
 import time
 import random
 
-def wait(constant=3, maybe_more=4):
+def wait(constant=3, maybe_more=3):
     time.sleep(constant + random.random() * maybe_more)
 
 def extract_name_and_id(response:dict):
@@ -54,11 +54,11 @@ def set_url(browser, page:str):
     except:
         return None
 
-def get_shows_dates_in_ul(browser, ul_path:str):
+def get_shows_dates_in_ul(browser, artist:str, ul_path:str):
     """Given a selenium webdriver browser object and a 
     selector path for a unordered list, retreive the dates
     and locations of concerts in that list"""
-    shows_dates_list = []
+    shows_list = []
     list_items = browser.find_elements_by_css_selector(ul_path+' > li')
     for li in list_items:
         try:
@@ -70,10 +70,26 @@ def get_shows_dates_in_ul(browser, ul_path:str):
         time_el = li.find_element_by_css_selector('time')
         location = loc_el.text 
         time = time_el.get_attribute('datetime')
-        shows_dates_list.append((location, time))
-    return shows_dates_list
+        row = {'artist': artist, 'loc': location, 'date': time}
+        shows_list.append(row)
+    return shows_list
+
+def get_pages_shows_dates(browser, url:str, artist:str):
+    multipage_shows_list = []
+    for i in range(2,4):    
+        # 3 Pages of concerts should be enough.. ~ 3 yrs for Jason Aldean
+        shows_list = get_shows_dates_in_ul(browser=browser,
+                                           artist=artist,
+                                           ul_path='#event-listings > ul')
+        multipage_shows_list.extend(shows_list)
+        if len(shows_list) < 50:
+            break
+        new_url = url + f'?page={i}'
+        browser.get(new_url)
+    return multipage_shows_list
 
 def get_artist_concerts(browser, artist:str):
+    master_artist_shows_list=[]
     artist_url = get_url_for_artist(browser, artist)
     browser.get(artist_url)
     wait()
@@ -81,18 +97,23 @@ def get_artist_concerts(browser, artist:str):
     gig_url = set_url(browser, 'gigography')
     if not cal_url:
         #scrape upcoming on main page
-        pass
+        shows_list = get_shows_dates_in_ul(browser=browser,
+                                           artist=artist,
+                                           ul_path='#calendar-summary > ul')
+        master_artist_shows_list.extend(shows_list)
     if not gig_url:
-        #scrape past shows on main page
-        pass
+        shows_list = get_shows_dates_in_ul(browser=browser,
+                                           artist=artist,
+                                           ul_path='#gigography-summary > ul')
+        master_artist_shows_list.extend(shows_list)
     if cal_url:
         browser.get(cal_url)
         wait()
-        #scrap page
-        pass
+        shows_list = get_pages_shows_dates(browser=browser,url=cal_url,artist=artist)
+        master_artist_shows_list.extend(shows_list)
     if gig_url:
         browser.get(gig_url)
         wait()
-        #scrap page
-        pass
-    
+        shows_list = get_pages_shows_dates(browser=browser,url=gig_url,artist=artist)
+        master_artist_shows_list.extend(shows_list)
+    return master_artist_shows_list
