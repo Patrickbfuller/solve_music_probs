@@ -106,5 +106,8 @@ venv.bak/
 # json data
 *.json
 
+# csv data
+*.csv
+
 # adblocker
 *.crx
