@@ -1,7 +1,12 @@
 import time
 import random
 
+# Functions for Spotify's 'spotipy' python api wrapper:
 def wait(constant=3, maybe_more=3):
+    """Abbreviated version of time.sleep().
+    Always will sleep for constant length, and will add 
+    a random length between 0 and 'maybe_more'
+    """
     time.sleep(constant + random.random() * maybe_more)
 
 def extract_name_and_id(response:dict):
@@ -34,6 +39,7 @@ def get_artists_in_playlist(playlist_data):
     return list(set(artists))
 
 
+# Functions for scraping concerts from songkick.com with selenium
 def get_url_for_artist(browser, artist:str):
     """Given a selenium webdriver browser object, and an artist name,
     return the url of the artists page on songkick.com"""
@@ -137,3 +143,6 @@ def get_artist_concerts(browser, artist:str):
         shows_list = get_pages_shows_dates(browser=browser,url=gig_url,artist=artist)
         master_artist_shows_list.extend(shows_list)
     return master_artist_shows_list
+
+# Functions for data cleaning?
+# x-x-x-x?
