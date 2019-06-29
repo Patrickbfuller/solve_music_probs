@@ -1,5 +1,7 @@
+import pandas as pd
 import time
 import random
+from sklearn.neighbors import NearestNeighbors
 
 # Functions for Spotify's 'spotipy' python api wrapper:
 def wait(constant=3, maybe_more=3):
@@ -144,5 +146,75 @@ def get_artist_concerts(browser, artist:str):
         master_artist_shows_list.extend(shows_list)
     return master_artist_shows_list
 
-# Functions for data cleaning?
-# x-x-x-x?
+
+
+
+def get_artist_places(ref_df, artist):
+    """Write Me!!!"""
+    artist_df = ref_df.loc[ref_df['artist']==artist]
+    return artist_df['location'].unique()
+
+def find_unplayed_cities(ref_df, main_artist, similar_artist):
+    """ WRITE ME """
+    main_places = get_artist_places(ref_df, main_artist)
+    similar_artist_places = get_artist_places(ref_df, similar_artist)
+
+    unplayed_cities = []
+    for place in similar_artist_places:
+        if place not in main_places:
+            unplayed_cities.append(place)
+    return unplayed_cities
+
+def prep_main_artist_df(ref_df, main_artist):
+    """ Takes in a dataframe of concert towns and dates for many artists 
+    Returns a dataframe of unique towns for one artist """
+    main_df = ref_df.loc[ref_df['artist']== main_artist, ['location', 'lat', 'lng']]
+    main_df.drop_duplicates(subset='location', inplace=True)
+    main_df.reset_index(drop=True, inplace=True)
+    return main_df
+
+
+class NeighborModel():
+    """Write Me """
+
+    def __init__(self, ref_df, main_artist):
+        """ Store a df of cities w latlongs, and fit a nn model to it """
+        self.main_artist_df = prep_main_artist_df(ref_df, main_artist)
+        self.model = NearestNeighbors(n_neighbors=1, n_jobs=-1)
+        self.model.fit(self.main_artist_df[['lat', 'lng']])
+
+    def predict(self, latlong):
+        """Take in a lat long and predict the closest city from local df """
+        distances, indices = self.model.kneighbors(latlong)
+        nn_distance, nn_index = distances[0][0], indices[0][0]
+        nn_city = self.main_artist_df.loc[nn_index, 'location']
+        return nn_city, nn_distance
+
+
+def get_neighbors_of_new_cities(ref_df, main_artist, new_cities:list):
+    """WRITE ME"""
+    # Instantiate custom neighbor model
+    neighbor_model = NeighborModel(ref_df, main_artist)
+
+    new_cities_and_neighbors = []
+    for new_city in new_cities:
+        new_latlong = ref_df.loc[ref_df['location']==new_city, ['lat', 'lng']]
+        new_latlong.drop_duplicates(inplace=True) # can remove if un-duped
+                                                            
+        neighbor, distance = neighbor_model.predict(new_latlong)
+
+        new_cities_and_neighbors.append(
+            {'new':new_city, 'nearest_old':neighbor, 'distance': distance}
+            )
+    return new_cities_and_neighbors
+        
+
+
+def pilfer_similar_artist(ref_df, main_artist, similar_artist):
+    # Find new cities
+    new_cities = find_unplayed_cities(ref_df, main_artist, similar_artist)
+    # Match those cities with closest old cities, and the distance
+        # Train model
+    # Order new cities by distance to old(DESC)
+    return get_neighbors_of_new_cities(ref_df,main_artist,new_cities)
+    
