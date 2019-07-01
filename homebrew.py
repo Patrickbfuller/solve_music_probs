@@ -1,6 +1,7 @@
 import pandas as pd
 import time
 import random
+from haversine import haversine
 from sklearn.neighbors import NearestNeighbors
 
 # Functions for Spotify's 'spotipy' python api wrapper:
@@ -180,7 +181,7 @@ class NeighborModel():
     def __init__(self, ref_df, main_artist):
         """ Store a df of cities w latlongs, and fit a nn model to it """
         self.main_artist_df = prep_main_artist_df(ref_df, main_artist)
-        self.model = NearestNeighbors(n_neighbors=1, n_jobs=-1)
+        self.model = NearestNeighbors(n_neighbors=1, n_jobs=-1, metric=haversine)
         self.model.fit(self.main_artist_df[['lat', 'lng']])
 
     def predict(self, latlong):
