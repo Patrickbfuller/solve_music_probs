@@ -4,7 +4,7 @@ import random
 from haversine import haversine
 from sklearn.neighbors import NearestNeighbors
 
-# Functions for Spotify's 'spotipy' python api wrapper:
+# - - Functions for Spotify's 'spotipy' python api wrapper - - 
 def wait(constant=3, maybe_more=3):
     """Abbreviated version of time.sleep().
     Always will sleep for constant length, and will add 
@@ -42,7 +42,8 @@ def get_artists_in_playlist(playlist_data):
     return list(set(artists))
 
 
-# Functions for scraping concerts from songkick.com with selenium
+# - - Functions for scraping concerts from songkick.com with selenium - - 
+
 def get_url_for_artist(browser, artist:str):
     """Given a selenium webdriver browser object, and an artist name,
     return the url of the artists page on songkick.com"""
@@ -148,7 +149,7 @@ def get_artist_concerts(browser, artist:str):
     return master_artist_shows_list
 
 
-
+# - - Functions for Neighboring Concert Locations
 
 def get_artist_places(ref_df, artist):
     """Write Me!!!"""
@@ -209,7 +210,6 @@ def get_neighbors_of_new_cities(ref_df, main_artist, new_cities:list):
             )
     return new_cities_and_neighbors
         
-
 
 def pilfer_similar_artist(ref_df, main_artist, similar_artist):
     # Find new cities
