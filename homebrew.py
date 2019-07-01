@@ -1,8 +1,16 @@
 import pandas as pd
+import json
 import time
 import random
 from haversine import haversine
 from sklearn.neighbors import NearestNeighbors
+
+
+import googlemaps
+with open('/Users/patrickfuller/.secrets/googlemap_api.json') as f:
+    api_key = json.load(f)['api_key']
+gmaps = gmaps = googlemaps.Client(key=api_key)
+
 
 # - - Functions for Spotify's 'spotipy' python api wrapper - - 
 def wait(constant=3, maybe_more=3):
@@ -151,6 +159,14 @@ def get_artist_concerts(browser, artist:str):
 
 # - - Functions for Neighboring Concert Locations
 
+def get_latlong(query:str):
+    """Use google maps geocode api to find the lat and long for a given text query."""
+    response = gmaps.geocode(query)
+    latlong = response[0]['geometry']['location']
+    lat = latlong['lat']
+    lng = latlong['lng']
+    return lat, lng
+
 def get_artist_places(ref_df, artist):
     """Write Me!!!"""
     artist_df = ref_df.loc[ref_df['artist']==artist]
@@ -219,3 +235,17 @@ def pilfer_similar_artist(ref_df, main_artist, similar_artist):
     # Order new cities by distance to old(DESC)
     return get_neighbors_of_new_cities(ref_df,main_artist,new_cities)
     
+
+
+
+class SimilarArtistModel():
+    """Write Me"""
+    def __init__(self, dataframe):
+        self.df = dataframe
+
+        self.model = NearestNeighbors(n_neighbors=5, metric='cosine', n_jobs=-1)
+
+        self.model.fit(self.df.drop('artist', axis=1))
+
+    def find_artists_sim_to(self, artist1):
+        pass
