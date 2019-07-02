@@ -227,7 +227,7 @@ def get_neighbors_of_new_cities(ref_df, main_artist, new_cities:list):
         #     , 'date'].values[0]
 
         new_cities_and_neighbors.append(
-            {'new':new_city, 'nearest_old':neighbor, 'distance': distance_miles}
+            {'new':new_city, 'played':neighbor, 'distance': distance_miles}
             )
     return new_cities_and_neighbors
         
@@ -256,14 +256,13 @@ class SimilarArtistModel():
         self.model.fit(self.playlists)
 
     def find_artists_sim_to(self, artist1, n_neighbors=None):
-        print(self.artists.head())
         art1_idx = self.artists.index[self.artists['artist']==artist1][0] # sliced to extract from nested index object
         if n_neighbors == None:
             n_neighbors = 20
-        self.distances, self.indices, = self.model.kneighbors(self.playlists, n_neighbors)
+        self.distances, self.indices, = self.model.kneighbors(self.playlists, n_neighbors+1)
 
-        sim_artist_dists = self.distances[art1_idx]
-        sim_artist_idxs = self.indices[art1_idx]
+        sim_artist_dists = self.distances[art1_idx][1:]
+        sim_artist_idxs = self.indices[art1_idx][1:]
 
         similars = []
         for dist, idx in zip(sim_artist_dists, sim_artist_idxs): 
@@ -272,3 +271,6 @@ class SimilarArtistModel():
                 (similar_artist, round(dist,3))
                 )
         return similars
+
+
+# def 
