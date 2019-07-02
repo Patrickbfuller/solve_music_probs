@@ -250,17 +250,18 @@ def pilfer_similar_artist(ref_df, main_artist, similar_artist, max_new_cities=No
 class SimilarArtistModel():
     """Write Me"""
     def __init__(self, dataframe):
-        self.artists = dataframe[['artist']]
+        self.artists = dataframe[['artist']].applymap(str.lower)
         self.playlists = dataframe.drop('artist', axis=1)
         self.model = NearestNeighbors(n_neighbors=5, metric='cosine', n_jobs=-1)
         self.model.fit(self.playlists)
 
     def find_artists_sim_to(self, artist1, n_neighbors=None):
+        print(self.artists.head())
+        art1_idx = self.artists.index[self.artists['artist']==artist1][0] # sliced to extract from nested index object
         if n_neighbors == None:
             n_neighbors = 20
         self.distances, self.indices, = self.model.kneighbors(self.playlists, n_neighbors)
 
-        art1_idx = self.artists[self.artists['artist']==artist1].index[0] # sliced to extract from nested index object
         sim_artist_dists = self.distances[art1_idx]
         sim_artist_idxs = self.indices[art1_idx]
 
