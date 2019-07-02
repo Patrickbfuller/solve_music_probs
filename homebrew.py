@@ -258,9 +258,9 @@ class SimilarArtistModel():
         self.model = NearestNeighbors(n_neighbors=5, metric='cosine', n_jobs=-1)
         self.model.fit(self.playlists)
 
-    def find_artists_sim_to(self, artist1, n_neighbors=None):
+    def find_artists_sim_to(self, main_artist, n_neighbors=None):
         """WRITE ME"""
-        art1_idx = self.artists.index[self.artists['artist']==artist1][0] # sliced to extract from nested index object
+        art1_idx = self.artists.index[self.artists['artist']==main_artist][0] # sliced to extract from nested index object
         if n_neighbors == None:
             n_neighbors = 20
         self.distances, self.indices, = self.model.kneighbors(self.playlists, n_neighbors+1)
@@ -276,20 +276,23 @@ class SimilarArtistModel():
                 )
         return similars
 
-    def find_similar_artist_venues(self, artist1, shows_df, num_artists=None, max_new_cities=None):
+    def find_similar_artist_venues(self, main_artist, shows_df, num_artists=None, max_new_cities=None):
         """WRITE ME"""
         if num_artists==None:
             num_artists = 3
         if max_new_cities==None:
             max_new_cities =5
-        if artist1 not in shows_df['artist'].values:
+        if main_artist not in shows_df['artist'].values:
             return f'{main_artist.title()}: No Recent Shows OR Not In 20 Of Top Playlists'
         try:
-            similar_artists = self.find_artists_sim_to(artist1, n_neighbors=num_artists)
-            
-
-
-
-
+            results = []
+            similar_artists = self.find_artists_sim_to(main_artist, n_neighbors=num_artists)
+            for artist, cosine_sim in similar_artists:
+                sim_artist_dict = {}
+                sim_artist_dict['artist'] = artist
+                sim_artist_dict['cosine_sim'] = cosine_sim
+                sim_artist_dict['new locations'] = pilfer_similar_artist(shows_df, main_artist, artist)
+                results.append(sim_artist_dict)
+            return results
         except:
             return 'Unexpected Error'
