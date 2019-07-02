@@ -95,6 +95,7 @@ def get_shows_dates_in_ul(browser, artist:str, ul_path:str):
     return shows_list
 
 def get_pages_shows_dates(browser, url:str, artist:str):
+    """WRITE ME"""
     multipage_shows_list = []
     for i in range(2,4):    
         # 3 Pages of concerts should be enough.. ~ 3 yrs for Jason Aldean
@@ -109,6 +110,7 @@ def get_pages_shows_dates(browser, url:str, artist:str):
     return multipage_shows_list
 
 def get_artist_concerts(browser, artist:str):
+    """WRITE ME"""
     master_artist_shows_list=[]
     try:
         artist_url = get_url_for_artist(browser, artist)
@@ -250,12 +252,14 @@ def pilfer_similar_artist(ref_df, main_artist, similar_artist, max_new_cities=No
 class SimilarArtistModel():
     """Write Me"""
     def __init__(self, dataframe):
+        """WRITE ME"""
         self.artists = dataframe[['artist']]
         self.playlists = dataframe.drop('artist', axis=1)
         self.model = NearestNeighbors(n_neighbors=5, metric='cosine', n_jobs=-1)
         self.model.fit(self.playlists)
 
     def find_artists_sim_to(self, artist1, n_neighbors=None):
+        """WRITE ME"""
         art1_idx = self.artists.index[self.artists['artist']==artist1][0] # sliced to extract from nested index object
         if n_neighbors == None:
             n_neighbors = 20
@@ -272,5 +276,20 @@ class SimilarArtistModel():
                 )
         return similars
 
+    def find_similar_artist_venues(self, artist1, shows_df, num_artists=None, max_new_cities=None):
+        """WRITE ME"""
+        if num_artists==None:
+            num_artists = 3
+        if max_new_cities==None:
+            max_new_cities =5
+        if artist1 not in shows_df['artist'].values:
+            return f'{main_artist.title()}: No Recent Shows OR Not In 20 Of Top Playlists'
+        try:
+            similar_artists = self.find_artists_sim_to(artist1, n_neighbors=num_artists)
+            
 
-# def 
+
+
+
+        except:
+            return 'Unexpected Error'
