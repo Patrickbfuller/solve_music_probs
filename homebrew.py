@@ -220,21 +220,30 @@ def get_neighbors_of_new_cities(ref_df, main_artist, new_cities:list):
         new_latlong.drop_duplicates(inplace=True) # can remove if un-duped
                                                             
         neighbor, distance = neighbor_model.predict(new_latlong)
+        distance_miles = round(distance / 1.609)
+
+        # date = ref_df.loc[
+        #     (ref_df['artist']==main_artist & ref_df['location']==neighbor)
+        #     , 'date'].values[0]
 
         new_cities_and_neighbors.append(
-            {'new':new_city, 'nearest_old':neighbor, 'distance': distance}
+            {'new':new_city, 'nearest_old':neighbor, 'distance': distance_miles}
             )
     return new_cities_and_neighbors
         
 
-def pilfer_similar_artist(ref_df, main_artist, similar_artist):
+def pilfer_similar_artist(ref_df, main_artist, similar_artist, max_new_cities=None):
+    """WRITE ME"""
+    if max_new_cities == None:
+        max_new_cities = 5
     # Find new cities
     new_cities = find_unplayed_cities(ref_df, main_artist, similar_artist)
     # Match those cities with closest old cities, and the distance
         # Train model
     # Order new cities by distance to old(DESC)
-    return get_neighbors_of_new_cities(ref_df,main_artist,new_cities)
-    
+    cities_and_neighbors = get_neighbors_of_new_cities(ref_df,main_artist,new_cities)
+    cities_by_dist = sorted(cities_and_neighbors, key=lambda x: x['distance'], reverse=True)
+    return cities_by_dist[:max_new_cities]
 
 
 
@@ -255,8 +264,10 @@ class SimilarArtistModel():
         sim_artist_dists = self.distances[art1_idx]
         sim_artist_idxs = self.indices[art1_idx]
 
-        similars = {}
-        for dist, idx in zip(sim_artist_dists, sim_artist_idxs):   # index from one on to skip self, dist = 0 
+        similars = []
+        for dist, idx in zip(sim_artist_dists, sim_artist_idxs): 
             similar_artist = self.artists.loc[idx,'artist']
-            similars[round(dist,3)] = similar_artist
+            similars.append(
+                (similar_artist, round(dist,3))
+                )
         return similars
