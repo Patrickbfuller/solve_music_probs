@@ -37,3 +37,6 @@ The reported potential new locations commonly report cities in Florida, or New M
 
 ### Deployment
 I hope to deploy this to a flask app but since my model is not predicting on any new input I am unsure whether an input box is appropriate.
+
+
+https://docs.google.com/presentation/d/1TtvH-CrZ5NVIcBCZBS1WQN3wksU0Z6-NYIoeiVYvM40/edit#slide=id.g35f391192_00

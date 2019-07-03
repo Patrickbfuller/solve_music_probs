@@ -1,7 +1,6 @@
 import pickle
 import pandas as pd
-from .. import homebrew
-
+from . import homebrew as hb
 from flask import Flask, request, render_template, jsonify
 
 
