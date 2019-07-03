@@ -25,13 +25,22 @@ For the concerts: I removed any data points older than 2015, and any data for co
 
 ### Modeling
 
+To model artist similarity, an unsupervised NearestNeighbor model is fit to the artists' playlist appearances and evaluate their distance with cosine similarity in the multiple dimensions(1763 different playlists).
+
+Next for a given featured artist, a second NearestNeighbor trains on the locations that an artist has played. Then, iterating through each place that a simlilar artist has played but the featured artist has not, this second NearestNeighbor finds the nearest location that the featured artist HAS played. 
 
 I'll set aside a final validation set of labeled images, maybe 20% for each class. Then I'll use Tensorflow to build an image classifier by fine tuning a pre-trained base model and tf.keras.Sequential. I'll also try using deep feature extraction on the images and making predictions using logistic regression, random forest, etc.
 
 ### Evaluation
+
+
+
 I will report both the accuracy score and cross entropy loss, on training and test data. Because I don't want to die in the woods, I'll tie the evaluation back to my original business problem and choose classification thresholds that maximize recall for poisonous berries. I plan to use k-fold cross validation to do any needed parameter tuning.
 
 ### Deployment
+
+
+
 The model will be deployed as a Flask app that can be used to upload a picture of a plant from a mobile phone to get a prediction of its species.
 
 
