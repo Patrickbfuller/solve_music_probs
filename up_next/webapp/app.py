@@ -1,10 +1,10 @@
 import pickle
 import pandas as pd
-from . import homebrew as hb
+from .. import homebrew
 from flask import Flask, request, render_template, jsonify
 
 
-with open('sim_artist_model.pkl', 'rb') as f:
+with open('up_next/sim_artist_model.pkl', 'rb') as f:
     model = pickle.load(f)
 app = Flask(__name__, static_url_path="")
 
