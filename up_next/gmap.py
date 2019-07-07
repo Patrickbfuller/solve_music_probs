@@ -1,4 +1,4 @@
-# Python script for processing concert data
+# Python code for processing concert data
 
 # get_latlong, get_multi_latlongs
 

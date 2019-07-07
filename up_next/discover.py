@@ -1,4 +1,4 @@
-# Python script for getting information about similar artists
+# Python code for getting information about similar artists
 
 # Includes: 
 # SimilarArtistModel
