@@ -63,7 +63,13 @@ class NeighborCitiesModel():
 
 
 def get_neighbors_of_new_cities(concerts_df, main_artist, new_cities:list):
-    """For each """
+    """
+    Given a list of cities where an artist has not been, return info on nearest cities
+    where an artist HAS been. 
+    Input a list of strings for city names, return a list of dictionaries whose keys are:
+    'unplayed', 'played', 'distance'. The values for 'unplayed' and 'played' are 
+    dictionaries with keys: 'city' and 'latlong'.
+    """
     # Instantiate custom neighbor model
     neighbor_model = NeighborCitiesModel(concerts_df, main_artist)
 
@@ -82,18 +88,23 @@ def get_neighbors_of_new_cities(concerts_df, main_artist, new_cities:list):
     return unplayed_and_played
 
 def pilfer_similar_artist(concerts_df, main_artist, similar_artist, max_new_cities=None, cutoff_dist=None):
-    """WRITE ME"""
+    """Given an main artist, and a similar artist, find info about cities where a similar artist has played 
+    but the main artist has not. Remove any cities that are close together(within cutoff). Return a list of
+    new cities and their corresponding data, with closer cities appearing first."""
     if max_new_cities == None:
         max_new_cities = 5
     if cutoff_dist == None:
         cutoff_dist == 100
     # Find new cities
     new_cities = find_unplayed_cities(concerts_df, main_artist, similar_artist)
-    # Match those cities with closest old cities
+
+    # Retrieve info for closet played cities.
     cities_and_nns = get_neighbors_of_new_cities(concerts_df,main_artist,new_cities)
-    # Remove any new cities that are with in the cutoff distance
+
+    # Remove any new cities that are with in the cutoff distance 
     relevant_cities_and_nns = [x for x in cities_and_nns if x['distance'] > cutoff_dist]
-    # Order new cities by nearest to played
+
+    # Sort new cities by nearest to played
     cities_by_dist = sorted(relevant_cities_and_nns, key=lambda x: x['distance'])
     return cities_by_dist[:max_new_cities]
 
