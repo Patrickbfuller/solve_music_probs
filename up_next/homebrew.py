@@ -167,7 +167,7 @@ def get_latlong(query:str):
     latlong = response[0]['geometry']['location']
     lat = latlong['lat']
     lng = latlong['lng']
-    return lat, lng
+    return lat, lng         # moved to gmap.py
 
 def get_artist_places(ref_df, artist):
     """Write Me!!!"""
@@ -277,7 +277,10 @@ class SimilarArtistModel():
         return similars
 
     def find_similar_artist_venues(self, main_artist, shows_df, num_artists=None, max_new_cities=None):
-        """WRITE ME"""
+        """
+        Returns locations of similar artists starting with 
+        most similar artist and cities furthest to closest
+        """
         if num_artists==None:
             num_artists = 3
         if max_new_cities==None:
