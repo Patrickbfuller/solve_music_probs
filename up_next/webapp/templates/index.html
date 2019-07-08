@@ -14,18 +14,35 @@
                 document["result"].html = response.text
             else:
                 warnings.warn(response.text)
-        def get_prediction(ev):
-            """Get the predicted probability."""
+
+
+        #def get_prediction(ev):
+        #    """Get the predicted probability."""
+        #    req = ajax.ajax()
+        #    req.bind('complete', show_results)
+        #    req.open('POST', '/predict', True)
+        #    req.set_header('content-type','application/json')
+        #    data = json.dumps({'user_input': document['user_input'].value})
+        #    req.send(data)
+        #document["predict_button"].bind("click", get_prediction)
+        
+
+        def display_concerts(ev):
+            """Show a map of an artist and similar artists' concerts."""
             req = ajax.ajax()
             req.bind('complete', show_results)
             req.open('POST', '/predict', True)
             req.set_header('content-type','application/json')
             data = json.dumps({'user_input': document['user_input'].value})
             req.send(data)
-        document["predict_button"].bind("click", get_prediction)
+        document["display_button"].bind("click", display_concerts)
       </script>
-      <textarea id="user_input"></textarea>
-      <button id="predict_button">Predict!</button>
+      <select id="user_input">
+        {% for artist in artists %}
+        <option value="{{artist}}" >{{artist}}</option>
+        {% endfor %}
+      </select>
+      <button id="display_button">Display!</button>
       <div id="result"></div>
     </body>
   </html>

@@ -47,7 +47,7 @@ class NeighborCitiesModel():
         AND fit a haversine nearest neighbors model to it.
         """
         self.main_artist_df = prep_main_artist_df(concerts_df, main_artist)
-        self.model = NearestNeighbors(n_neighbors=1, n_jobs=-1, metric=haversine)
+        self.model = NearestNeighbors(n_neighbors=1, metric=haversine)
         self.model.fit(self.main_artist_df[['lat', 'lng']])
 
     def find_closest_city(self, latlong):
@@ -121,7 +121,7 @@ class SimilarArtistModel():
         """
         self.artists = playlists_df[['artist']]
         self.playlists = playlists_df.drop('artist', axis=1)
-        self.model = NearestNeighbors(n_neighbors=5, metric='cosine', n_jobs=-1)
+        self.model = NearestNeighbors(n_neighbors=5, metric='cosine')
         self.model.fit(self.playlists)
         self.concerts = concerts_df
 
