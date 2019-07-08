@@ -94,7 +94,7 @@ def pilfer_similar_artist(concerts_df, main_artist, similar_artist, max_new_citi
     if max_new_cities == None:
         max_new_cities = 5
     if cutoff_dist == None:
-        cutoff_dist == 100
+        cutoff_dist = 100
     # Find new cities
     new_cities = find_unplayed_cities(concerts_df, main_artist, similar_artist)
 
@@ -156,7 +156,7 @@ class SimilarArtistModel():
         if num_artists==None:
             num_artists = 3
         if max_new_cities==None:
-            max_new_cities =5
+            max_new_cities = 5
         if not concerts_df:
             concerts_df = self.concerts
         if main_artist not in concerts_df['artist'].values:

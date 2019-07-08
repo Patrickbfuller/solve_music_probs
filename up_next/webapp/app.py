@@ -25,5 +25,5 @@ def display():
     untapped = model.find_similar_artist_venues(artist)
     m = viz.add_multi_artist_markers(artist, untapped)    
     # return jsonify({'probability': prediction[0][1]})
-    # return m
-    return jsonify({1:1})
+    # return jsonify({1:1})
+    return m
