@@ -1,8 +1,7 @@
+# Python code for depicting map of artist concerts.
+
 import folium
 
-# unplayed_colors=[‘red’, ‘blue’, ‘green’, ‘purple’, ‘orange’, ‘darkred’,
-#  ’lightred’, ‘beige’, ‘darkblue’, ‘darkgreen’, ‘cadetblue’, ‘darkpurple’, 
-#  ‘white’, ‘pink’, ‘lightblue’, ‘lightgreen’, ‘gray’, ‘black’]
 unplayed_colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'black',
                    'beige', 'darkblue', 'darkgreen', 'lightblue', 'lightgreen']
 
@@ -30,7 +29,7 @@ def get_unplayed_icon(i):
     return icon
 
 # Set a map with good broad view of entire US
-m = folium.Map(location=(42,-100), zoom_start=5)
+# m = folium.Map(location=(42,-100), zoom_start=5)
 
 def add_city_marker(artist, city_dict, icon=None):
     """
@@ -75,11 +74,15 @@ def add_sim_artist_markers(main_aritst, sim_artist_dict, sim_artist_idx):
         add_marker_pair(main_aritst, sim_artist, sim_artist_idx, new_location)
     # return m
 
+m = folium.Map(location=(42,-100), zoom_start=5)
+
 def add_multi_artist_markers(main_aritst, similar_artists:list):
     """
     For each artist dictionary in similar artists, add markers 
     for unplayed cities.
     """
+    if type(similar_artists)!= list:
+        return similar_artists
     for idx, sim_artist in enumerate(similar_artists):
         add_sim_artist_markers(main_aritst, sim_artist, idx)
     return m
