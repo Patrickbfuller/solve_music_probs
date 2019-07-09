@@ -50,19 +50,19 @@ def add_city_marker(artist, city_dict, icon=None):
              ).add_to(m)
     # return m
 
-def add_marker_pair(main_aritst, sim_artist, sim_artist_idx, new_location_dict):
+def add_marker_pair(main_artist, sim_artist, sim_artist_idx, new_location_dict):
     """
     Add a marker for the unplayed and played locations in a new_location dictionary.
     """
     played_city_dict = new_location_dict['played']
-    add_city_marker(main_aritst, played_city_dict)
+    add_city_marker(main_artist, played_city_dict)
 
     unplayed_city_dict = new_location_dict['unplayed']
     unplayed_icon = get_unplayed_icon(sim_artist_idx)
     add_city_marker(sim_artist, unplayed_city_dict, icon=unplayed_icon)
     # return m
 
-def add_sim_artist_markers(main_aritst, sim_artist_dict, sim_artist_idx):
+def add_sim_artist_markers(main_artist, sim_artist_dict, sim_artist_idx):
     """
     Add markers for each new city from an artist.
     New locations being a list of dictionaries with keys:
@@ -71,18 +71,88 @@ def add_sim_artist_markers(main_aritst, sim_artist_dict, sim_artist_idx):
     sim_artist = sim_artist_dict['artist']
     new_locations = sim_artist_dict['new locations']
     for new_location in new_locations:
-        add_marker_pair(main_aritst, sim_artist, sim_artist_idx, new_location)
+        add_marker_pair(main_artist, sim_artist, sim_artist_idx, new_location)
     # return m
 
 m = folium.Map(location=(42,-100), zoom_start=5)
 
-def add_multi_artist_markers(main_aritst, similar_artists:list):
+def add_multi_artist_markers(main_artist, sim_artist_cities:list):
     """
     For each artist dictionary in similar artists, add markers 
     for unplayed cities.
     """
-    if type(similar_artists)!= list:
-        return similar_artists
-    for idx, sim_artist in enumerate(similar_artists):
-        add_sim_artist_markers(main_aritst, sim_artist, idx)
+    if type(sim_artist_cities)!= list:
+        return sim_artist_cities
+    for idx, sim_artist in enumerate(sim_artist_cities):
+        add_sim_artist_markers(main_artist, sim_artist, idx)
     return m
+
+class AritstMap():
+    """
+    Class for instantiating a folium map and then displaying 
+    artist markers.
+    """
+    
+    def __init__(self, main_artist, sim_artist_cities:list):
+        self.m = folium.Map(location=(42,-100), zoom_start=5)
+        self.main_artist = main_artist
+        self.sim_artist_cities = sim_artist_cities
+        add_multi_artist_markers(self.main_artist, self.sim_artist_cities)
+
+    def add_city_marker(self, artist, city_dict, icon=None):
+        """
+        Add a marker for a city. Default to 'gray home' for main artist.
+        For similar artists pass in an icon object.
+        """
+        if icon==None:
+            icon = get_home_icon()
+        cityname = city_dict['city']
+        latlong = city_dict['latlong']
+
+        info = artist+'\n-\n'+cityname
+
+        marker = folium.Marker(location=latlong,
+                               popup=info,
+                               tooltip=artist,
+                               icon=icon
+                              )
+        marker.add_to(self.m)
+
+    def add_marker_pair(self, sim_artist, sim_artist_idx, new_location_dict):
+        """
+        Add a marker for the unplayed and played locations in a new_location dictionary.
+        """
+        played_city_dict = new_location_dict['played']
+        add_city_marker(self.main_artist, played_city_dict)
+
+        unplayed_city_dict = new_location_dict['unplayed']
+        unplayed_icon = get_unplayed_icon(sim_artist_idx)
+        add_city_marker(sim_artist, unplayed_city_dict, icon=unplayed_icon)
+
+    def add_sim_artist_markers(self, sim_artist_dict, sim_artist_idx):
+        """
+        Add markers for each new city from an artist.
+        New locations being a list of dictionaries with keys:
+        'unplayed' and 'played.
+        """
+        sim_artist = sim_artist_dict['artist']
+        new_locations = sim_artist_dict['new locations']
+        for new_location in new_locations:
+            add_marker_pair(self.main_artist, sim_artist, sim_artist_idx, new_location)
+
+    def add_multi_artist_markers(self):
+        """
+        For each artist dictionary in similar artists, add markers 
+        for unplayed cities.
+        """
+        for idx, sim_artist in enumerate(self.sim_artist_cities):
+            add_sim_artist_markers(self.main_artist, sim_artist, idx)
+    
+    def show(self):
+        """Return a folium map object for viewing in a notebook"""
+        return self.m 
+
+    def get_map_html(self):
+        """Return a string of html for a folium map"""
+        m_html = self.m._repr_html_()
+        return m_html
