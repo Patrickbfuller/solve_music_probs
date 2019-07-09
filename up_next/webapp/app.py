@@ -24,6 +24,10 @@ def display():
     artist = data['user_input']
     untapped = model.find_similar_artist_venues(artist)
     m = viz.add_multi_artist_markers(artist, untapped)    
+    m.save('templates/artist_map.html')
+    print(
+        'HERE HERE HERE', m
+    )
     # return jsonify({'probability': prediction[0][1]})
     # return jsonify({1:1})
-    return m
+    # return m
