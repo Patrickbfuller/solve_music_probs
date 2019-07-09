@@ -189,4 +189,13 @@ class AritstMap():
     def get_map_html(self):
         """Return a string of html for a folium map"""
         m_html = self.m._repr_html_()
-        return m_html
+        explanation_html = """
+            <h2>
+                <ul>
+                    <li>Gray Markers Represent Selected Artist.</li>
+                    <li>Black Markers Represent Color Coded Similar Artists.</li>
+                    <li>Legend Indicates Cosine Distance</li>
+                </ul>
+            </h2>
+        """
+        return m_html + explanation_html

@@ -4,7 +4,7 @@
       <script type="text/javascript" src="brython.js"></script>
       <script type="text/javascript" src="brython_stdlib.js"></script>
     </head>
-    <body onload="brython(1)">
+    <body onload="brython(1)", style="font-family:sans-serif">
       <script type="text/python3">
         from browser import document, ajax
         import json
@@ -49,9 +49,9 @@
       Number of Similar Artists:
       <br>
       <select id="num_artists">
-        {% for num in range(1,11) %}
-        <option value="{{num}}" >{{num}}</option>
-        {% endfor %}
+          {% for num in range(1,11) %}
+          <option value="{{num}}" >{{num}}</option>
+          {% endfor %}
       </select>
       <br>
       City Distance:
@@ -63,5 +63,12 @@
         </select>
       <button id="display_button">Display!</button>
       <div id="result"></div>
+      <!-- <h2>
+        <ul>
+          <li>Gray Markers Represent Selected Artist.</li>
+          <li>Black Markers Represent Color Coded Similar Artists.</li>
+          <li>Legend Indicates Cosine Distance</li>
+        </ul>
+      </h2> -->
     </body>
   </html>
