@@ -4,28 +4,32 @@ import folium
 
 unplayed_colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'black',
                    'beige', 'darkblue', 'darkgreen', 'lightblue', 'lightgreen']
+unplayed_colors = [
+    '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
+    '#00FFFF', '#FF8800', '#FF0088', '#8800FF', '#BFF844'
+]
 
 
-def get_under_twelve(i):
-    """Recursive function to subtract 12 until less than 12"""
-    if i >= 12:
-        i -= 12
-        i = get_under_twelve(i)
+def get_under_ten(i):
+    """Recursive function to subtract 10 until less than 10"""
+    if i >= 10:
+        i -= 10
+        i = get_under_ten(i)
     return i
 
 def get_home_icon():
     """Instantiate a home icon"""
     return folium.Icon(icon='home',
-                       color='black',
-                       icon_color='yellow')
+                       color='lightgray',
+                       icon_color= '#505050')
 
 def get_unplayed_icon(i):
     """Return a folium.Icon object with a particular color for an artist"""
-    i = get_under_twelve(i)
+    i = get_under_ten(i)
     color = unplayed_colors[i]
     icon=folium.Icon(icon='fire',
-                     color=color,
-                     icon_color='white')
+                     color='black',
+                     icon_color=color)
     return icon
 
 # Set a map with good broad view of entire US
@@ -147,6 +151,10 @@ class AritstMap():
         """
         for idx, sim_artist in enumerate(self.sim_artist_cities):
             self.add_sim_artist_markers(sim_artist, idx)
+    
+    def add_legend(self):
+        """ Add a legend with a color and cosine sim for each artist. """
+        pass
     
     def show(self):
         """Return a folium map object for viewing in a notebook"""
