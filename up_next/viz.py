@@ -5,8 +5,8 @@ import folium
 unplayed_colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'black',
                    'beige', 'darkblue', 'darkgreen', 'lightblue', 'lightgreen']
 unplayed_colors = [
-    '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
-    '#00FFFF', '#FF8800', '#FF0088', '#8800FF', '#BFF844'
+    '#DF0101', '#FFBF00', '#A5DF00', '#088A08', '#01DFD7',
+    '#2E9AFE', '#642EFE', '#CC2EFA', '#FA58AC', '#F79E41'
 ]
 
 
@@ -102,6 +102,7 @@ class AritstMap():
         self.main_artist = main_artist
         self.sim_artist_cities = sim_artist_cities
         self.add_multi_artist_markers()
+        self.add_legend()
 
     def add_city_marker(self, artist, city_dict, icon=None):
         """
@@ -154,7 +155,33 @@ class AritstMap():
     
     def add_legend(self):
         """ Add a legend with a color and cosine sim for each artist. """
-        pass
+
+        legend_keys = ''
+        for i, artist_dict in enumerate(self.sim_artist_cities):
+            artist_name = artist_dict['artist']
+            cosine_sim = artist_dict['cosine_sim']
+
+            legend_key = f"""
+                &nbsp; {cosine_sim} &nbsp;
+                <i class="fa fa-play fa-2x" style="color: {unplayed_colors[i]}"></i>
+                {artist_name} <br>
+                """
+            legend_keys += legend_key
+
+        legend_html = f"""
+                    <div style="
+                    position: fixed;
+                    bottom: 0px; left: 0px; 
+                    width: 250px; height: {len(self.sim_artist_cities) * 30 + 30}px;
+                    border:2px dashed grey; z-index:9999; 
+                    font-size:14px; font-weight:bold;
+                    background-color:rgba(255, 255, 255, 0.4);
+                    ">
+                    &nbsp; Legend Title <br>
+                    {legend_keys}
+                    </div>
+                    """
+        self.m.get_root().html.add_child(folium.Element(legend_html))
     
     def show(self):
         """Return a folium map object for viewing in a notebook"""
