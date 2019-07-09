@@ -14,19 +14,7 @@
                 document["result"].html = response.text
             else:
                 warnings.warn(response.text)
-
-
-        #def get_prediction(ev):
-        #    """Get the predicted probability."""
-        #    req = ajax.ajax()
-        #    req.bind('complete', show_results)
-        #    req.open('POST', '/predict', True)
-        #    req.set_header('content-type','application/json')
-        #    data = json.dumps({'user_input': document['user_input'].value})
-        #    req.send(data)
-        #document["predict_button"].bind("click", get_prediction)
         
-
         def display_concerts(ev):
             """Show a map of an artist and similar artists' concerts."""
             req = ajax.ajax()
