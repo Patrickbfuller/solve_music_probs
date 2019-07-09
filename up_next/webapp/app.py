@@ -23,7 +23,8 @@ def display():
     data = request.json
     artist = data['user_input']
     untapped = model.find_similar_artist_venues(artist)
-    viz.set_map()
-    m = viz.add_multi_artist_markers(artist, untapped) 
-    m_html = m._repr_html_()
-    return m_html
+    artist_map = viz.AritstMap(artist, untapped)
+    map_html = artist_map.get_map_html()
+    # m = viz.add_multi_artist_markers(artist, untapped) 
+    # m_html = m._repr_html_()
+    return map_html
