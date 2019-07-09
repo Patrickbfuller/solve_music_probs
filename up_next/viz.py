@@ -2,8 +2,6 @@
 
 import folium
 
-unplayed_colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'black',
-                   'beige', 'darkblue', 'darkgreen', 'lightblue', 'lightgreen']
 unplayed_colors = [
     '#DF0101', '#FFBF00', '#A5DF00', '#088A08', '#01DFD7',
     '#2E9AFE', '#642EFE', '#CC2EFA', '#FA58AC', '#F79E41'
@@ -27,7 +25,7 @@ def get_unplayed_icon(i):
     """Return a folium.Icon object with a particular color for an artist"""
     i = get_under_ten(i)
     color = unplayed_colors[i]
-    icon=folium.Icon(icon='fire',
+    icon=folium.Icon(icon='play',
                      color='black',
                      icon_color=color)
     return icon
@@ -148,9 +146,10 @@ class AritstMap():
     def add_multi_artist_markers(self):
         """
         For each artist dictionary in similar artists, add markers 
-        for unplayed cities.
+        for unplayed cities Added in reverse to less markers of important 
+        artiss are overlayed by markers of more important artists.
         """
-        for idx, sim_artist in enumerate(self.sim_artist_cities):
+        for idx, sim_artist in enumerate(self.sim_artist_cities[::-1]):
             self.add_sim_artist_markers(sim_artist, idx)
     
     def add_legend(self):

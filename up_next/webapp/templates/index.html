@@ -21,15 +21,46 @@
             req.bind('complete', show_results)
             req.open('POST', '/predict', True)
             req.set_header('content-type','application/json')
-            data = json.dumps({'user_input': document['user_input'].value})
+            data = json.dumps({
+              'artist_input': document['artist_input'].value,
+              'max_cities': document['max_cities'].value,
+              'num_artists': document['num_artists'].value,
+              'cutoff_dist': document['cutoff_dist'].value
+            })
             req.send(data)
         document["display_button"].bind("click", display_concerts)
       </script>
-      <select id="user_input">
+      Select an Artist:
+      <br>
+      <select id="artist_input">
         {% for artist in artists %}
         <option value="{{artist}}" >{{artist}}</option>
         {% endfor %}
       </select>
+      <br>
+      Max Number of Cities per Artists:
+      <br>
+      <select id="max_cities">
+          {% for num in range(1,11) %}
+          <option value="{{num}}" >{{num}}</option>
+          {% endfor %}
+        </select>
+      <br>
+      Number of Similar Artists:
+      <br>
+      <select id="num_artists">
+        {% for num in range(1,11) %}
+        <option value="{{num}}" >{{num}}</option>
+        {% endfor %}
+      </select>
+      <br>
+      City Distance:
+      <br>
+      <select id="cutoff_dist">
+          {% for dist in range(25, 200, 25) %}
+          <option value="{{dist}}" >{{dist}}</option>
+          {% endfor %}
+        </select>
       <button id="display_button">Display!</button>
       <div id="result"></div>
     </body>

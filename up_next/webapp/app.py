@@ -21,8 +21,16 @@ def index():
 def display():
     """Return folium map."""
     data = request.json
-    artist = data['user_input']
-    untapped = model.find_similar_artist_venues(artist)
+    artist = data['artist_input']
+    max_new_cities = int(data['max_cities'])
+    num_artists = int(data['num_artists'])
+    cutoff_dist = int(data['cutoff_dist'])
+    untapped = model.find_similar_artist_venues(
+        main_artist=artist,
+        max_new_cities=max_new_cities,
+        num_artists=num_artists,
+        cutoff_dist=cutoff_dist
+        )
     artist_map = viz.AritstMap(artist, untapped)
     map_html = artist_map.get_map_html()
     # m = viz.add_multi_artist_markers(artist, untapped) 
