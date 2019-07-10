@@ -96,7 +96,7 @@ class AritstMap():
     """
     
     def __init__(self, main_artist, sim_artist_cities:list):
-        self.m = folium.Map(location=(42,-100), zoom_start=5)
+        self.m = folium.Map(location=(42,-100), zoom_start=4)
         self.main_artist = main_artist
         self.sim_artist_cities = sim_artist_cities
         self.add_multi_artist_markers()
@@ -198,4 +198,4 @@ class AritstMap():
                 </ul>
             </h2>
         """
-        return m_html + explanation_html
+        return explanation_html + m_html 

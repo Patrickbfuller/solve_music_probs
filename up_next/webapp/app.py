@@ -14,7 +14,7 @@ artists_list = pd.read_csv(fp)['artist'].tolist()
 @app.route('/')
 def index():
     """Return the main page."""
-    return render_template('index.html', artists=artists_list)
+    return render_template('bootstrap_index.html', artists=artists_list)
 
 
 @app.route('/predict', methods=['GET', 'POST'])
