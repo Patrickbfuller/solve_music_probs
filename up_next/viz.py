@@ -176,7 +176,7 @@ class AritstMap():
                     font-size:14px; font-weight:bold;
                     background-color:rgba(255, 255, 255, 0.4);
                     ">
-                    &nbsp; Legend Title <br>
+                    &nbsp; Similarity of Artist(Lower Is Better) <br>
                     {legend_keys}
                     </div>
                     """
