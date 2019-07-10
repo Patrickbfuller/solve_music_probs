@@ -103,8 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# json data
-*.json
+# # json data
+# *.json
 
 # csv data
 *.csv
@@ -117,3 +117,6 @@ venv.bak/
 
 # .vscode/
 .vscode/
+
+# Security vulnerability
+package-lock.json
