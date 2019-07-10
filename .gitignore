@@ -103,8 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# # json data
-# *.json
+# json data
+*.json
 
 # csv data
 *.csv
