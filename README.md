@@ -6,6 +6,8 @@ Use data to make more informed music business decisions!
 ### Business Understanding 
 Indepedent musical artists or any artist with out a data team may have trouble deciding which geographic regions to invest in. If they've got a fan base in one location, who's to say they may not be able to build a fan base somewhere else in the country? But where to start? It's a big country! To help narrow down the options, I suggest starting two questions: 'Who else do our fans listen to?' and 'Where do those groups play??'. Why locations where similar artists are playing A region with fans of similar artists will likely be fertile ground for expansion. A model that recommends untapped locations where similar artists have fans, would help provide a starting point for artists to expand.
 
+![](up_next/artist_map_demo.png)
+
 ### Data Understanding
 Potential features for gauging similarity of two artists may include, sonic features or genre. For this experiment I will gauge similarity by playlist co-presence. If two artists are appearing in the same playlists together they would be similar. For example: Out of all the playlists that ArtistA appears in, the more ArtistB appears in, the more similar is ArtistB.
 
