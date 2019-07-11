@@ -1,18 +1,21 @@
-# Python code for retrieving playlist data from spotify and concert data from songkick.com
+# Python code for retrieving playlist data from spotify and concert data from
+# songkick.com
 
 import time
 import random
 
+
 def wait(constant=3, maybe_more=3):
-    """Abbreviated version of time.sleep().
-    Always will sleep for constant length, and will add 
-    a random length between 0 and 'maybe_more'
+    """
+    Abbreviated version of time.sleep(). Always will sleep for constant
+    length, and will add a random length between 0 and 'maybe_more'.
     """
     time.sleep(constant + random.random() * maybe_more)
 
-def extract_name_and_id(response:dict):
-    """Given the result of a spotipy playlist query, return 
-    a id and name of the playlist results.
+
+def extract_name_and_id(response: dict):
+    """Given the result of a spotipy playlist query, return a id and name of
+    the playlist results.
     Parameters:
     ---
     Input: Dictionary
@@ -28,9 +31,12 @@ def extract_name_and_id(response:dict):
         result[id_code] = {'name': name, 'owner_id': owner_id}
     return result
 
+
 def get_artists_in_playlist(playlist_data):
-    """Given a spotify playlist tracks item, return a list of
-     unique artists with tracks on the playlist"""
+    """
+    Given a spotify playlist tracks item, return a list of unique artists with
+    tracks on the playlist.
+    """
     artists = []
     track_list = playlist_data['items']
     for track_data in track_list:
@@ -40,56 +46,66 @@ def get_artists_in_playlist(playlist_data):
     return list(set(artists))
 
 
-# - - Functions for scraping concerts from songkick.com with selenium - - 
-
-def get_url_for_artist(browser, artist:str):
+# - - Functions for scraping concerts from songkick.com with selenium - -
+def get_url_for_artist(browser, artist: str):
     """Given a selenium webdriver browser object, and an artist name,
     return the url of the artists page on songkick.com"""
-    url_prefix = 'https://www.songkick.com/search?utf8=%E2%9C%93&type=initial&query='
+    url_prefix = """https://www.songkick.com/search?utf8=%E2%9C%93&type=initia
+    l&query="""
     query = artist.replace(' ', '+')
     browser.get(url_prefix+query)
     selector = 'li.artist > div.subject > p.summary a'
     a_element = browser.find_element_by_css_selector(selector)
-    # a_element = browser.find_element_by_css_selector('p.summary a')  # Old version didn't skip non artists
+    # a_element = browser.find_element_by_css_selector('p.summary a')
+    # # Old version didn't skip non artists
     return a_element.get_attribute('href')
 
-def set_url(browser, page:str):
-    """Given a selenium webdriver browser object and a page 
-    title(calendar or gigography only), return the url for the page.
-    WILL RETURN NONE if link is not on the page."""
+
+def set_url(browser, page: str):
+    """
+    Given a selenium webdriver browser object and a page title(calendar or
+    gigography only), return the url for the page. WILL RETURN NONE if link is
+    not on the page.
+    """
     try:
         element = browser.find_element_by_css_selector(
             f'#{page}-summary > h2 > small > a')
         return element.get_attribute('href')
-    except:
+    except Exception:
         return None
 
-def get_shows_dates_in_ul(browser, artist:str, ul_path:str):
-    """Given a selenium webdriver browser object and a 
-    selector path for a unordered list, retreive the dates
-    and locations of concerts in that list"""
+
+def get_shows_dates_in_ul(browser, artist: str, ul_path: str):
+    """Given a selenium webdriver browser object and a selector path for a
+    unordered list, retreive the dates and locations of concerts in that list.
+    """
     shows_list = []
     list_items = browser.find_elements_by_css_selector(ul_path+' > li')
     for li in list_items:
         try:
-            loc_el = li.find_element_by_css_selector('p.location > span > span')
-        except:
-            continue      # Elements that do not have a location 
-                          # are just inconsistent bolded timestamps
-                          # and should be skipped to avoid dups
+            loc_el = li.find_element_by_css_selector(
+                'p.location > span > span'
+                )
+        except Exception:
+            continue
+        # Elements that do not have a location
+        # are just inconsistent bolded timestamps
+        # and should be skipped to avoid dups
         time_el = li.find_element_by_css_selector('time')
-        location = loc_el.text 
+        location = loc_el.text
         time = time_el.get_attribute('datetime')
         row = {'artist': artist, 'loc': location, 'date': time}
         shows_list.append(row)
     return shows_list
 
-def get_pages_shows_dates(browser, url:str, artist:str):
+
+def get_pages_shows_dates(browser, url: str, artist: str):
     """
-    Get shows with dates for an artists upcoming or past concerts over multiple web pages.
+    Get shows with dates for an artists upcoming or past concerts over
+    multiple web pages.
     """
     multipage_shows_list = []
-    for i in range(2,4):    
+    for i in range(2, 4):
         # 3 Pages of concerts should be enough.. ~ 3 yrs for Jason Aldean
         shows_list = get_shows_dates_in_ul(browser=browser,
                                            artist=artist,
@@ -101,9 +117,10 @@ def get_pages_shows_dates(browser, url:str, artist:str):
         browser.get(new_url)
     return multipage_shows_list
 
-def get_artist_concerts(browser, artist:str):
+
+def get_artist_concerts(browser, artist: str):
     """
-    Get an artist's concerts from songkick.com. 
+    Get an artist's concerts from songkick.com.
     Return empty list if:
         The artist doesn't appear in the search result,
         The artist doesn't have a recent concert div(eg. Bradley Cooper)
@@ -111,27 +128,29 @@ def get_artist_concerts(browser, artist:str):
     For past and future concerts, if more than appear on the artist's
     main page, collect up to 3 pages of event listings.
     """
-    master_artist_shows_list=[]
+    master_artist_shows_list = []
     try:
         artist_url = get_url_for_artist(browser, artist)
-        wait(2,1)
-    except:
+        wait(2, 1)
+    except Exception:
         return []
     browser.get(artist_url)
     # check if artist is recent
-    past_summary = get_shows_dates_in_ul(browser=browser,
-                                       artist=artist,
-                                       ul_path='#gigography-summary > ul')
+    past_summary = get_shows_dates_in_ul(
+        browser=browser,
+        artist=artist,
+        ul_path='#gigography-summary > ul'
+        )
     if not past_summary:    # Some artists don't even have a gig-summary
         return []               # Skip these artists
     recent_check = past_summary[-1]['date'][:4]     # Look at last element
     if int(recent_check) < 2015:                    # in summary table
-        return [] 
+        return []
     wait()
     cal_url = set_url(browser, 'calendar')   # None if the link isn't present
     gig_url = set_url(browser, 'gigography')
     if not cal_url:
-        # scrape upcoming on main page only 
+        # scrape upcoming on main page only
         # if theres not a link to more upcomings
         shows_list = get_shows_dates_in_ul(browser=browser,
                                            artist=artist,
@@ -141,19 +160,23 @@ def get_artist_concerts(browser, artist:str):
         # Scrape past on main page only
         # if no link to more past gigs
         # Already have the list from recent check
-        master_artist_shows_list.extend(past_summary)   # Already have the 
-                                                        # list from 'recent check'
+        master_artist_shows_list.extend(past_summary)
+        # Already have the list from 'recent check'
 
     if cal_url:
         # Scrape calendar pages if more upcomings on another page.
         browser.get(cal_url)
         wait()
-        shows_list = get_pages_shows_dates(browser=browser,url=cal_url,artist=artist)
+        shows_list = get_pages_shows_dates(
+            browser=browser, url=cal_url, artist=artist
+            )
         master_artist_shows_list.extend(shows_list)
     if gig_url:
         # Scrape gigography pages if more past gigs on another page
         browser.get(gig_url)
         wait()
-        shows_list = get_pages_shows_dates(browser=browser,url=gig_url,artist=artist)
+        shows_list = get_pages_shows_dates(
+            browser=browser, url=gig_url, artist=artist
+            )
         master_artist_shows_list.extend(shows_list)
     return master_artist_shows_list

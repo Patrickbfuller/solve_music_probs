@@ -219,7 +219,7 @@ class SimilarArtistModel():
                 )
                 results.append(sim_artist_dict)
             return results
-        except IndexError:
+        except Exception:
             return 'Unexpected Error'
 
 
