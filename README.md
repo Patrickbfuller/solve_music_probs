@@ -26,7 +26,7 @@ I collected the artists and playlists as appearances of artists in each playlist
 For the concerts: I removed any data points older than 2015, and any data for concerts outside of the US. I then merged the geographic coordinates to the concerts. Finally, to help prevent capitilzation errors, all the names of the artists in both tables were coerced to lowercase.
 
 ### Modeling
-To model artist similarity, an unsupervised NearestNeighbor model is fit to the artists' playlist appearances and evaluate their distance with cosine similarity in the multiple dimensions(1763 different playlists in this dataset - may change with date of collection).
+To model artist similarity, an unsupervised NearestNeighbor model is fit to the artists' playlist appearances and evaluate their distance with cosine similarity (0-1) in the multiple dimensions(1763 different playlists in this dataset - may change with date of collection).
 
 Next for a given featured artist, a second NearestNeighbor trains on the locations that an artist has played. Then, iterating through each place that a simlilar artist has played but the featured artist has not, this second NearestNeighbor finds the nearest location that the featured artist HAS played. A custom class returns these new locations ordered by distance from a the locations already played. The distance between locations is computed with the haversine calculation to account for the irregularity of longitudinal distance.
 
