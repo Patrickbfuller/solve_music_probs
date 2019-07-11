@@ -42,6 +42,6 @@ Here are some areas where the model came up short:
 Also the reported potential new locations commonly report cities in Florida, or New Mexico, or Colorado. This is due to Florida being a peninsula and the sparcity of cities in the desert and mountain regions.
 
 ### Deployment
-This model is deployed with a Flask app at 'url tbd'
+This model is deployed with a Flask app at [www.morefans.online](www.morefans.online)
 
 Slides for presentation can be found [Here!](up_next/next_up_slides.pdf). 
