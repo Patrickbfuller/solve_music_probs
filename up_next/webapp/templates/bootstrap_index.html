@@ -157,7 +157,7 @@
                           Number of Artists to Compare:
                       </div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <select id="max_cities" style="font-size: 14px">
+                        <select id="num_artists" style="font-size: 14px">
                             {% for num in range(1,11) %}
                             <option value="{{num}}" >{{num}}</option>
                             {% endfor %}
@@ -184,7 +184,7 @@
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                            <select id="num_artists" style="font-size: 14px">
+                            <select id="max_cities" style="font-size: 14px">
                                 {% for num in range(1,11) %}
                                 <option value="{{num}}" >{{num}}</option>
                                 {% endfor %}
@@ -204,7 +204,7 @@
               </div>
             </div>
 
-            <!-- Pending Requests Card Example -->
+            <!-- Cutoff Distance -->
             <div class="col-xl-3 col-md-6 mb-4" style="margin: auto">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
