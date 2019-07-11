@@ -44,6 +44,4 @@ Also the reported potential new locations commonly report cities in Florida, or 
 ### Deployment
 This model is deployed with a Flask app at 'url tbd'
 
-Slides for presentation can be found below:
-
-https://docs.google.com/presentation/d/1TtvH-CrZ5NVIcBCZBS1WQN3wksU0Z6-NYIoeiVYvM40/edit#slide=id.g35f391192_00
+Slides for presentation can be found [Here!](up_next/next_up_slides.pdf). 
