@@ -11,17 +11,22 @@ with open('/Users/patrickfuller/.secrets/googlemap_api.json') as f:
     api_key = json.load(f)['api_key']
 gmaps = gmaps = googlemaps.Client(key=api_key)
 
-def get_latlong(query:str):
-    """Use google maps geocode api to find the lat and long for a given text query."""
+
+def get_latlong(query: str):
+    """
+    Use google maps geocode api to find the lat and long for a given text
+    query.
+    """
     response = gmaps.geocode(query)
     latlong = response[0]['geometry']['location']
     lat = latlong['lat']
     lng = latlong['lng']
     return lat, lng
 
-def get_multi_latlongs(unique_locations:list):
+
+def get_multi_latlongs(unique_locations: list):
     """
-    Given a list of cities, assign lat and long to the cities and return 
+    Given a list of cities, assign lat and long to the cities and return
     a dataframe with columns, 'location', 'lat', 'long'.
     """
     unique_loc_w_latlong = []
