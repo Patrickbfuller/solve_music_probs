@@ -3,9 +3,10 @@
 import folium
 
 unplayed_colors = [
-    '#DF0101', '#FFBF00', '#A5DF00', '#088A08', '#01DFD7',
-    '#2E9AFE', '#642EFE', '#CC2EFA', '#FA58AC', '#F79E41'
+    '#f54242', '#f58142', '#f5b942', '#f5e642', '#c2f542',
+    '#60f542', '#42f5ad', '#42f5f5', '#42b9f5', '#426cf5'
 ]
+
 
 
 def get_under_ten(i):
@@ -149,7 +150,11 @@ class AritstMap():
         for unplayed cities Added in reverse to less markers of important 
         artiss are overlayed by markers of more important artists.
         """
-        for idx, sim_artist in enumerate(self.sim_artist_cities[::-1]):
+        # for idx, sim_artist in enumerate(self.sim_artist_cities[::-1]):
+        #     self.add_sim_artist_markers(sim_artist, idx)
+
+        for idx in reversed(range(len(self.sim_artist_cities))):
+            sim_artist = self.sim_artist_cities[idx]
             self.add_sim_artist_markers(sim_artist, idx)
     
     def add_legend(self):
@@ -158,6 +163,8 @@ class AritstMap():
         legend_keys = ''
         for i, artist_dict in enumerate(self.sim_artist_cities):
             artist_name = artist_dict['artist']
+            if len(artist_name) > 20:
+                artist_name = artist_name[:18] + '...'
             cosine_sim = artist_dict['cosine_sim']
 
             legend_key = f"""
@@ -171,12 +178,17 @@ class AritstMap():
                     <div style="
                     position: fixed;
                     bottom: 0px; left: 0px; 
-                    width: 250px; height: {len(self.sim_artist_cities) * 30 + 30}px;
+                    width: 250px; height: {len(self.sim_artist_cities) * 30 + 60}px;
                     border:2px dashed grey; z-index:9999; 
                     font-size:14px; font-weight:bold;
                     background-color:rgba(255, 255, 255, 0.4);
                     ">
-                    &nbsp; Similarity of Artist(Lower Is Better) <br>
+                    &nbsp; Difference of Artist(Lower Is Better) <br>
+                
+                    &nbsp; [ Selected: {self.main_artist}
+                    <i class="fa fa-home fa-2x" style="color: gray"></i> ]
+                    <br>
+                    
                     {legend_keys}
                     </div>
                     """
